@@ -235,12 +235,3 @@ def openapi_schema():
             }
         }
     })
-
-if __name__ == "__main__":
-    print("\n--- Zenplify Local API Starting ---\n")
-    print("Endpoints:")
-    print("  POST /create_table  → Create new Notion database")
-    print("  POST /insert        → Add row to existing Notion database")
-    print("  GET  /health        → Check if running")
-    print("\nReady.")
-    app.run(host="127.0.0.1", port=5000, debug=True)
