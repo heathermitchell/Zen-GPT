@@ -70,14 +70,12 @@ def create_table():
 def insert_row():
     data = request.get_json(force=True)
     db_id = data.get("database_id")
-    
-    if not db_id:
-        return jsonify({"error": "Missing database_id"}), 400
+    values = data.get("values")
+
+    if not db_id or not values:
+        return jsonify({"error": "Missing database_id or values"}), 400
 
     try:
-        # Pull out everything except database_id as field data
-        values = {k: v for k, v in data.items() if k != "database_id"}
-
         properties = {}
         for k, v in values.items():
             if k.lower() == "tree":
@@ -237,3 +235,12 @@ def openapi_schema():
             }
         }
     })
+
+if __name__ == "__main__":
+    print("\n--- Zenplify Local API Starting ---\n")
+    print("Endpoints:")
+    print("  POST /create_table  → Create new Notion database")
+    print("  POST /insert        → Add row to existing Notion database")
+    print("  GET  /health        → Check if running")
+    print("\nReady.")
+    app.run(host="127.0.0.1", port=5000, debug=True)

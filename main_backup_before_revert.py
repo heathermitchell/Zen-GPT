@@ -70,14 +70,12 @@ def create_table():
 def insert_row():
     data = request.get_json(force=True)
     db_id = data.get("database_id")
-    
-    if not db_id:
-        return jsonify({"error": "Missing database_id"}), 400
+    values = data.get("values")
+
+    if not db_id or not values:
+        return jsonify({"error": "Missing database_id or values"}), 400
 
     try:
-        # Pull out everything except database_id as field data
-        values = {k: v for k, v in data.items() if k != "database_id"}
-
         properties = {}
         for k, v in values.items():
             if k.lower() == "tree":
@@ -176,64 +174,12 @@ def get_rows():
 def health():
     return "OK", 200
 
-@app.route("/openapi.json", methods=["GET"])
-def openapi_schema():
-    return jsonify({
-        "openapi": "3.0.0",
-        "info": {
-            "title": "Chirpy Note API",
-            "version": "1.0.0",
-            "description": "API for sending Chirpy notes into Notion"
-        },
-        "paths": {
-            "/insert": {
-                "post": {
-                    "summary": "Insert a new Chirpy note",
-                    "operationId": "send_chirpy_to_api",
-                    "requestBody": {
-                        "required": True,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "database_id": {
-                                            "type": "string"
-                                        },
-                                        "values": {
-                                            "type": "object",
-                                            "properties": {
-                                                "Tree": {
-                                                    "type": "string"
-                                                },
-                                                "Notes": {
-                                                    "type": "string"
-                                                },
-                                                "Status": {
-                                                    "type": "string"
-                                                },
-                                                "Tags": {
-                                                    "type": "array",
-                                                    "items": { "type": "string" }
-                                                },
-                                                "Vibe": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": ["Tree"]
-                                        }
-                                    },
-                                    "required": ["database_id", "values"]
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful insert"
-                        }
-                    }
-                }
-            }
-        }
-    })
+
+if __name__ == "__main__":
+    print("\n--- Zenplify Local API Starting ---\n")
+    print("Endpoints:")
+    print("  POST /create_table  → Create new Notion database")
+    print("  POST /insert        → Add row to existing Notion database")
+    print("  GET  /health        → Check if running")
+    print("\nReady.")
+    app.run(host="127.0.0.1", port=5000, debug=True)
