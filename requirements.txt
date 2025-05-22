@@ -3,4 +3,7 @@ flask_cors
 notion-client
 python-dotenv
 gunicorn
+pyyaml
+
+
 
