@@ -68,6 +68,7 @@ def create_table():
 
 @app.route("/insert", methods=["POST"])
 def insert_row():
+    print("DEBUG: INSERT ROUTE – Flattened version active")
     data = request.get_json(force=True)
     db_id = data.get("database_id")
     
